@@ -51,8 +51,9 @@
 
     .ads-column {
       flex: 1.5;
-      display: flex;
+      display: flex !important;
       justify-content: center;
+      min-height: 200px;
 
       .ads-wrapper {
         max-width: 520px;
@@ -63,9 +64,10 @@
         padding: 40px 0 40px 40px;
         border-radius: 24px;
         position: relative;
-        display: flex;
+        display: flex !important;
         flex-direction: column;
         justify-content: center;
+        min-height: 300px;
 
         .tabs,
         .ad-preview,

@@ -914,8 +914,9 @@ section {
 }
 #section-ad-examples .ad-examples-content .ads-column {
   flex: 1.5;
-  display: flex;
+  display: flex !important;
   justify-content: center;
+  min-height: 200px;
 }
 #section-ad-examples .ad-examples-content .ads-column .ads-wrapper {
   max-width: 520px;
@@ -926,9 +927,10 @@ section {
   padding: 40px 0 40px 40px;
   border-radius: 24px;
   position: relative;
-  display: flex;
+  display: flex !important;
   flex-direction: column;
   justify-content: center;
+  min-height: 300px;
 }
 #section-ad-examples .ad-examples-content .ads-column .ads-wrapper .tabs,
 #section-ad-examples .ad-examples-content .ads-column .ads-wrapper .ad-preview,
