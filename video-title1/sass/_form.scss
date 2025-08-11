@@ -229,6 +229,96 @@
     border-color: var(--primary-blue);
   }
 
+  /* Dropdown Styles */
+  .dropdown-wrapper {
+    position: relative;
+    width: 100%;
+  }
+
+  .dropdown-input-wrapper {
+    position: relative;
+    width: 100%;
+    display: flex;
+    align-items: center;
+  }
+
+  .dropdown-input {
+    padding-left: 40px !important;
+    padding-right: 40px !important;
+    cursor: pointer;
+  }
+
+  .dropdown-arrow {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%) rotate(90deg);
+    width: 16px;
+    height: 16px;
+    opacity: 0.5;
+    transition: transform 0.3s ease;
+    cursor: pointer;
+  }
+
+  .dropdown-wrapper.open .dropdown-arrow {
+    transform: translateY(-50%) rotate(-90deg);
+  }
+
+  .dropdown-options {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: white;
+    border: 1px solid var(--border-light);
+    border-top: none;
+    border-radius: 0 0 8px 8px;
+    max-height: 200px;
+    overflow-y: auto;
+    z-index: 1000;
+    display: none;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+
+  .dropdown-wrapper.open .dropdown-options {
+    display: block;
+  }
+
+  .dropdown-option {
+    padding: 12px 16px;
+    cursor: pointer;
+    font-size: 14px;
+    color: var(--text-dark);
+    transition: background-color 0.2s ease;
+    border-bottom: 1px solid var(--border-light);
+  }
+
+  .dropdown-option:last-child {
+    border-bottom: none;
+  }
+
+  .dropdown-option:hover {
+    background-color: #f3f4f6;
+  }
+
+  .dropdown-option.selected {
+    background-color: #e5e7eb;
+    font-weight: 500;
+  }
+
+  .dropdown-option.hidden {
+    display: none;
+  }
+
+  /* Error Message Styles */
+  .error-message {
+    color: #e53e3e;
+    font-size: 12px;
+    margin-top: 4px;
+    font-weight: 500;
+    display: block;
+  }
+
   /* Radio and Checkbox Styles */
   .radio-group,
   .checkbox-group {
@@ -262,8 +352,13 @@
   }
 
   .radio-item.active-field-wrapper .radio-option,
-  .checkbox-item.active-field-wrapper .checkbox-option {
+  .checkbox-item .checkbox-option {
     margin-bottom: 0px !important;
+  }
+
+  .radio-item.inactive-field-wrapper {
+    cursor: pointer;
+    transition: background-color 0.2s ease, border-color 0.2s ease;
   }
 
   /* URL Fields */
@@ -294,7 +389,7 @@
     display: flex;
     flex-direction: column;
     animation: slideDown 0.3s ease;
-    margin-bottom: 4px;
+    margin-top: 8px;
   }
 
   .active-field-wrapper {
@@ -311,14 +406,28 @@
     background: var(--neutralWhite, #fff);
     box-shadow: 0 1px 2px 0 rgba(16, 24, 40, 0.05);
     padding: 12px 12px 4px 12px;
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+    cursor: pointer;
+  }
+
+  .inactive-field-wrapper:hover {
+    background-color: #f5fbff;
+  }
+
+  .radio-item.inactive-field-wrapper:hover {
+    background-color: #f5fbff;
   }
 
   .form-step[data-step="2"] .inactive-field-wrapper {
-    padding: 23px 12px 15px 12px;
+    padding: 23px 12px;
   }
 
   .form-step[data-step="2"] .active-field-wrapper {
     padding: 12px;
+  }
+
+  .p-inactive {
+    padding: 23px 12px !important;
   }
 
   @keyframes slideDown {

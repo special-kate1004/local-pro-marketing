@@ -151,6 +151,85 @@ document.addEventListener("DOMContentLoaded", function () {
       input.addEventListener("change", handleInputChange);
     });
 
+    // Make entire checkbox items clickable
+    const checkboxItems = document.querySelectorAll(".checkbox-item");
+    console.log("Found checkbox items:", checkboxItems.length);
+
+    checkboxItems.forEach((item) => {
+      item.addEventListener("click", function (e) {
+        // Don't trigger if clicking on the input itself or URL field
+        if (
+          e.target.type === "checkbox" ||
+          e.target.closest(".service-url-field")
+        ) {
+          return;
+        }
+
+        const checkbox = this.querySelector('input[type="checkbox"]');
+        if (checkbox) {
+          checkbox.checked = !checkbox.checked;
+          checkbox.dispatchEvent(new Event("change"));
+        }
+      });
+
+      // Also handle clicks on labels that contain checkboxes
+      const label = item.querySelector("label.checkbox-option");
+      if (label) {
+        label.addEventListener("click", function (e) {
+          // Prevent the default label behavior and handle it manually
+          e.preventDefault();
+          e.stopPropagation();
+
+          const checkbox = this.querySelector('input[type="checkbox"]');
+          if (checkbox) {
+            checkbox.checked = !checkbox.checked;
+            checkbox.dispatchEvent(new Event("change"));
+          }
+        });
+      }
+
+      // Handle clicks on standalone labels (for Angi, Thumbtack, Yelp)
+      const standaloneLabel = item.querySelector("label.checkbox-option");
+      if (
+        standaloneLabel &&
+        !standaloneLabel.querySelector('input[type="checkbox"]')
+      ) {
+        standaloneLabel.addEventListener("click", function (e) {
+          e.preventDefault();
+          e.stopPropagation();
+
+          // Find the checkbox that comes before this label
+          const checkbox = this.previousElementSibling;
+          if (checkbox && checkbox.type === "checkbox") {
+            checkbox.checked = !checkbox.checked;
+            checkbox.dispatchEvent(new Event("change"));
+          }
+        });
+      }
+    });
+
+    // Make entire radio items clickable
+    const radioItems = document.querySelectorAll(".radio-item");
+    console.log("Found radio items:", radioItems.length);
+
+    radioItems.forEach((item) => {
+      item.addEventListener("click", function (e) {
+        // Don't trigger if clicking on the input itself or URL field
+        if (
+          e.target.type === "radio" ||
+          e.target.closest(".website-url-field")
+        ) {
+          return;
+        }
+
+        const radio = this.querySelector('input[type="radio"]');
+        if (radio) {
+          radio.checked = true;
+          radio.dispatchEvent(new Event("change"));
+        }
+      });
+    });
+
     console.log("Event listeners added successfully");
   }
 
@@ -247,6 +326,24 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
+  // Helper function to validate URL format
+  function isValidURL(url) {
+    try {
+      const urlObj = new URL(url);
+      return urlObj.protocol === "http:" || urlObj.protocol === "https:";
+    } catch (e) {
+      return false;
+    }
+  }
+
+  // Helper function to create error message
+  function createErrorMessage(text) {
+    const errorMsg = document.createElement("div");
+    errorMsg.className = "error-message";
+    errorMsg.textContent = text;
+    return errorMsg;
+  }
+
   // Validate current step
   function validateCurrentStep() {
     const currentStepEl = document.querySelector(
@@ -269,31 +366,26 @@ document.addEventListener("DOMContentLoaded", function () {
         field.style.borderColor = "#e53e3e";
 
         // Create and show error message
-        const errorMsg = document.createElement("div");
-        errorMsg.className = "error-message";
-        errorMsg.style.color = "#e53e3e";
-        errorMsg.style.fontSize = "12px";
-        errorMsg.style.marginTop = "4px";
-        errorMsg.style.fontWeight = "500";
+        let errorText = "This field is required";
 
         // Set specific error message based on field type/name
         if (field.id === "industry") {
-          errorMsg.textContent = "Please select your industry";
+          errorText = "Please select your industry";
         } else if (field.id === "business-name") {
-          errorMsg.textContent = "Please enter your business name";
+          errorText = "Please enter your business name";
         } else if (field.id === "location") {
-          errorMsg.textContent = "Please enter your business location";
+          errorText = "Please enter your business location";
         } else if (field.id === "marketing-budget") {
-          errorMsg.textContent = "Please select your marketing budget";
+          errorText = "Please select your marketing budget";
         } else if (field.id === "name") {
-          errorMsg.textContent = "Please enter your name";
+          errorText = "Please enter your name";
         } else if (field.id === "email") {
-          errorMsg.textContent = "Please enter your email address";
+          errorText = "Please enter your email address";
         } else if (field.id === "phone") {
-          errorMsg.textContent = "Please enter your phone number";
-        } else {
-          errorMsg.textContent = "This field is required";
+          errorText = "Please enter your phone number";
         }
+
+        const errorMsg = createErrorMessage(errorText);
 
         // Insert error message after the form-group container
         const formGroup = field.closest(".form-group");
@@ -305,6 +397,36 @@ document.addEventListener("DOMContentLoaded", function () {
         }
       }
     });
+
+    // Additional validation for step 1 - industry dropdown validation
+    if (currentStep === 1) {
+      const industryField = currentStepEl.querySelector("#industry");
+      if (industryField && industryField.value.trim()) {
+        // Get all valid industry options
+        const industryOptions = document.querySelectorAll(".dropdown-option");
+        const validIndustries = Array.from(industryOptions).map((option) =>
+          option.getAttribute("data-value")
+        );
+
+        // Check if entered value is a valid industry
+        const enteredValue = industryField.value.trim();
+        if (!validIndustries.includes(enteredValue)) {
+          isValid = false;
+          industryField.style.borderColor = "#e53e3e";
+
+          // Create and show error message
+          const errorMsg = createErrorMessage(
+            "Please select a valid industry from the dropdown"
+          );
+
+          // Insert error message after the form-group container
+          const formGroup = industryField.closest(".form-group");
+          if (formGroup) {
+            formGroup.appendChild(errorMsg);
+          }
+        }
+      }
+    }
 
     // Additional validation for step 1 - website radio button
     if (currentStep === 1) {
@@ -345,13 +467,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
         // Create and show error message
-        const errorMsg = document.createElement("div");
-        errorMsg.className = "error-message";
-        errorMsg.style.color = "#e53e3e";
-        errorMsg.style.fontSize = "12px";
-        errorMsg.style.marginTop = "4px";
-        errorMsg.style.fontWeight = "500";
-        errorMsg.textContent = "Please select an option";
+        const errorMsg = createErrorMessage("Please select an option");
 
         // Insert error message after the form-group container
         const formGroup = websiteGroup
@@ -388,13 +504,33 @@ document.addEventListener("DOMContentLoaded", function () {
             }
 
             // Create and show error message
-            const errorMsg = document.createElement("div");
-            errorMsg.className = "error-message";
-            errorMsg.style.color = "#e53e3e";
-            errorMsg.style.fontSize = "12px";
-            errorMsg.style.marginTop = "4px";
-            errorMsg.style.fontWeight = "500";
-            errorMsg.textContent = "Please enter your website URL";
+            const errorMsg = createErrorMessage(
+              "Please enter your website URL"
+            );
+
+            // Insert error message after the URL field
+            const urlFieldContainer = websiteUrlField
+              ? websiteUrlField.closest(".website-url-field")
+              : null;
+            if (urlFieldContainer) {
+              urlFieldContainer.appendChild(errorMsg);
+            }
+          } else if (!isValidURL(websiteUrlField.value.trim())) {
+            // URL is filled but invalid format
+            isValid = false;
+            console.log(
+              "Website validation - showing error: invalid URL format"
+            );
+
+            // Add error styling to URL field
+            if (websiteUrlField) {
+              websiteUrlField.style.borderColor = "#e53e3e";
+            }
+
+            // Create and show error message
+            const errorMsg = createErrorMessage(
+              "Please enter a valid URL (e.g., https://example.com)"
+            );
 
             // Insert error message after the URL field
             const urlFieldContainer = websiteUrlField
@@ -404,7 +540,7 @@ document.addEventListener("DOMContentLoaded", function () {
               urlFieldContainer.appendChild(errorMsg);
             }
           } else {
-            // URL is filled - remove any error styling
+            // URL is filled and valid - remove any error styling
             if (websiteUrlField) {
               websiteUrlField.style.borderColor = "";
             }
@@ -463,13 +599,30 @@ document.addEventListener("DOMContentLoaded", function () {
           }
 
           // Create and show error message
-          const errorMsg = document.createElement("div");
-          errorMsg.className = "error-message";
-          errorMsg.style.color = "#e53e3e";
-          errorMsg.style.fontSize = "12px";
-          errorMsg.style.marginTop = "4px";
-          errorMsg.style.fontWeight = "500";
-          errorMsg.textContent = "Please enter your Angi profile URL";
+          const errorMsg = createErrorMessage(
+            "Please enter your Angi profile URL"
+          );
+
+          // Insert error message after the URL field
+          const urlFieldContainer = angiUrlField
+            ? angiUrlField.closest(".service-url-field")
+            : null;
+          if (urlFieldContainer) {
+            urlFieldContainer.appendChild(errorMsg);
+          }
+        } else if (!isValidURL(angiUrlField.value.trim())) {
+          // URL is filled but invalid format
+          isValid = false;
+
+          // Add error styling to URL field
+          if (angiUrlField) {
+            angiUrlField.style.borderColor = "#e53e3e";
+          }
+
+          // Create and show error message
+          const errorMsg = createErrorMessage(
+            "Please enter a valid URL (e.g., https://example.com)"
+          );
 
           // Insert error message after the URL field
           const urlFieldContainer = angiUrlField
@@ -479,7 +632,7 @@ document.addEventListener("DOMContentLoaded", function () {
             urlFieldContainer.appendChild(errorMsg);
           }
         } else {
-          // URL is filled - remove any error styling
+          // URL is filled and valid - remove any error styling
           if (angiUrlField) {
             angiUrlField.style.borderColor = "";
           }
@@ -504,13 +657,30 @@ document.addEventListener("DOMContentLoaded", function () {
           }
 
           // Create and show error message
-          const errorMsg = document.createElement("div");
-          errorMsg.className = "error-message";
-          errorMsg.style.color = "#e53e3e";
-          errorMsg.style.fontSize = "12px";
-          errorMsg.style.marginTop = "4px";
-          errorMsg.style.fontWeight = "500";
-          errorMsg.textContent = "Please enter your Thumbtack profile URL";
+          const errorMsg = createErrorMessage(
+            "Please enter your Thumbtack profile URL"
+          );
+
+          // Insert error message after the URL field
+          const urlFieldContainer = thumbtackUrlField
+            ? thumbtackUrlField.closest(".service-url-field")
+            : null;
+          if (urlFieldContainer) {
+            urlFieldContainer.appendChild(errorMsg);
+          }
+        } else if (!isValidURL(thumbtackUrlField.value.trim())) {
+          // URL is filled but invalid format
+          isValid = false;
+
+          // Add error styling to URL field
+          if (thumbtackUrlField) {
+            thumbtackUrlField.style.borderColor = "#e53e3e";
+          }
+
+          // Create and show error message
+          const errorMsg = createErrorMessage(
+            "Please enter a valid URL (e.g., https://example.com)"
+          );
 
           // Insert error message after the URL field
           const urlFieldContainer = thumbtackUrlField
@@ -520,7 +690,7 @@ document.addEventListener("DOMContentLoaded", function () {
             urlFieldContainer.appendChild(errorMsg);
           }
         } else {
-          // URL is filled - remove any error styling
+          // URL is filled and valid - remove any error styling
           if (thumbtackUrlField) {
             thumbtackUrlField.style.borderColor = "";
           }
@@ -545,13 +715,30 @@ document.addEventListener("DOMContentLoaded", function () {
           }
 
           // Create and show error message
-          const errorMsg = document.createElement("div");
-          errorMsg.className = "error-message";
-          errorMsg.style.color = "#e53e3e";
-          errorMsg.style.fontSize = "12px";
-          errorMsg.style.marginTop = "4px";
-          errorMsg.style.fontWeight = "500";
-          errorMsg.textContent = "Please enter your Yelp profile URL";
+          const errorMsg = createErrorMessage(
+            "Please enter your Yelp profile URL"
+          );
+
+          // Insert error message after the URL field
+          const urlFieldContainer = yelpUrlField
+            ? yelpUrlField.closest(".service-url-field")
+            : null;
+          if (urlFieldContainer) {
+            urlFieldContainer.appendChild(errorMsg);
+          }
+        } else if (!isValidURL(yelpUrlField.value.trim())) {
+          // URL is filled but invalid format
+          isValid = false;
+
+          // Add error styling to URL field
+          if (yelpUrlField) {
+            yelpUrlField.style.borderColor = "#e53e3e";
+          }
+
+          // Create and show error message
+          const errorMsg = createErrorMessage(
+            "Please enter a valid URL (e.g., https://example.com)"
+          );
 
           // Insert error message after the URL field
           const urlFieldContainer = yelpUrlField
@@ -561,7 +748,7 @@ document.addEventListener("DOMContentLoaded", function () {
             urlFieldContainer.appendChild(errorMsg);
           }
         } else {
-          // URL is filled - remove any error styling
+          // URL is filled and valid - remove any error styling
           if (yelpUrlField) {
             yelpUrlField.style.borderColor = "";
           }
@@ -592,13 +779,9 @@ document.addEventListener("DOMContentLoaded", function () {
           : null;
         if (existingError) existingError.remove();
 
-        const errorMsg = document.createElement("div");
-        errorMsg.className = "error-message";
-        errorMsg.style.color = "#e53e3e";
-        errorMsg.style.fontSize = "12px";
-        errorMsg.style.marginTop = "4px";
-        errorMsg.style.fontWeight = "500";
-        errorMsg.textContent = "Please enter a valid email address";
+        const errorMsg = createErrorMessage(
+          "Please enter a valid email address"
+        );
 
         if (formGroup) {
           formGroup.appendChild(errorMsg);
@@ -618,13 +801,9 @@ document.addEventListener("DOMContentLoaded", function () {
           : null;
         if (existingError) existingError.remove();
 
-        const errorMsg = document.createElement("div");
-        errorMsg.className = "error-message";
-        errorMsg.style.color = "#e53e3e";
-        errorMsg.style.fontSize = "12px";
-        errorMsg.style.marginTop = "4px";
-        errorMsg.style.fontWeight = "500";
-        errorMsg.textContent = "Please enter a valid phone number";
+        const errorMsg = createErrorMessage(
+          "Please enter a valid phone number."
+        );
 
         if (formGroup) {
           formGroup.appendChild(errorMsg);
@@ -645,8 +824,18 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // Phone validation
   function isValidPhone(phone) {
-    const phoneRegex = /^[\+]?[1-9][\d]{0,15}$/;
-    return phoneRegex.test(phone.replace(/[\s\-\(\)]/g, ""));
+    // Remove all non-digit characters
+    const digitsOnly = phone.replace(/\D/g, "");
+
+    // US phone number must have exactly 10 digits
+    if (digitsOnly.length !== 10) {
+      return false;
+    }
+
+    // For masked input, check if the format is complete (all digits filled)
+    // The mask ensures format is (XXX) XXX-XXXX
+    const maskedFormat = /^\(\d{3}\) \d{3}-\d{4}$/;
+    return maskedFormat.test(phone);
   }
 
   // Reset form
@@ -792,6 +981,12 @@ document.addEventListener("DOMContentLoaded", function () {
   // Initialize video play buttons
   initializeVideoPlayButtons();
 
+  // Initialize dropdown functionality
+  initializeDropdown();
+
+  // Initialize phone number masking
+  initializePhoneMask();
+
   // Initialize video play buttons
   function initializeVideoPlayButtons() {
     console.log("Initializing video play buttons...");
@@ -821,6 +1016,8 @@ document.addEventListener("DOMContentLoaded", function () {
           if (overlay) {
             overlay.style.display = "none";
           }
+          // Remove dark overlay when playing
+          videoContainer.style.setProperty("--dark-overlay-opacity", "0");
         } else {
           video.pause();
           if (playButton) {
@@ -829,6 +1026,8 @@ document.addEventListener("DOMContentLoaded", function () {
           if (overlay) {
             overlay.style.display = "block";
           }
+          // Restore dark overlay when paused
+          videoContainer.style.setProperty("--dark-overlay-opacity", "1");
         }
       }
 
@@ -860,8 +1059,137 @@ document.addEventListener("DOMContentLoaded", function () {
         if (overlay) {
           overlay.style.display = "block";
         }
+        // Restore dark overlay when video ends
+        videoContainer.style.setProperty("--dark-overlay-opacity", "1");
       });
     });
+  }
+
+  // Initialize dropdown functionality
+  function initializeDropdown() {
+    const dropdownWrapper = document.querySelector(".dropdown-wrapper");
+    const dropdownInput = document.querySelector(".dropdown-input");
+    const dropdownOptions = document.querySelectorAll(".dropdown-option");
+    const dropdownArrow = document.querySelector(".dropdown-arrow");
+
+    if (!dropdownWrapper || !dropdownInput) return;
+
+    // Toggle dropdown on input click
+    dropdownInput.addEventListener("click", function (e) {
+      e.preventDefault();
+      dropdownWrapper.classList.toggle("open");
+    });
+
+    // Toggle dropdown on arrow click
+    if (dropdownArrow) {
+      dropdownArrow.addEventListener("click", function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        dropdownWrapper.classList.toggle("open");
+      });
+    }
+
+    // Handle option selection
+    dropdownOptions.forEach((option) => {
+      option.addEventListener("click", function () {
+        const value = this.getAttribute("data-value");
+        dropdownInput.value = value;
+        dropdownWrapper.classList.remove("open");
+
+        // Update selected state
+        dropdownOptions.forEach((opt) => opt.classList.remove("selected"));
+        this.classList.add("selected");
+
+        // Trigger input change for form validation
+        dropdownInput.dispatchEvent(new Event("input"));
+      });
+    });
+
+    // Search functionality
+    dropdownInput.addEventListener("input", function () {
+      const searchTerm = this.value.toLowerCase();
+
+      dropdownOptions.forEach((option) => {
+        const optionText = option.textContent.toLowerCase();
+        if (optionText.includes(searchTerm)) {
+          option.classList.remove("hidden");
+        } else {
+          option.classList.add("hidden");
+        }
+      });
+    });
+
+    // Close dropdown when clicking outside
+    document.addEventListener("click", function (e) {
+      if (!dropdownWrapper.contains(e.target)) {
+        dropdownWrapper.classList.remove("open");
+      }
+    });
+
+    // Handle keyboard navigation
+    dropdownInput.addEventListener("keydown", function (e) {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        dropdownWrapper.classList.toggle("open");
+      } else if (e.key === "Escape") {
+        dropdownWrapper.classList.remove("open");
+      }
+    });
+  }
+
+  // Initialize phone number masking with IMask
+  function initializePhoneMask() {
+    const phoneInput = document.querySelector("#phone");
+
+    if (phoneInput && window.IMask) {
+      const phoneMask = IMask(phoneInput, {
+        mask: "(000) 000-0000",
+        lazy: false,
+      });
+
+      // Update the phone validation to work with masked input
+      phoneInput.addEventListener("blur", function () {
+        const value = phoneInput.value;
+        const digitsOnly = value.replace(/\D/g, "");
+
+        if (value && digitsOnly.length !== 10) {
+          phoneInput.style.borderColor = "#e53e3e";
+
+          // Remove existing error message if any
+          const formGroup = phoneInput.closest(".form-group");
+          const existingError = formGroup
+            ? formGroup.querySelector(".error-message")
+            : null;
+          if (existingError) existingError.remove();
+
+          const errorMsg = createErrorMessage(
+            "Please enter a valid US phone number"
+          );
+
+          if (formGroup) {
+            formGroup.appendChild(errorMsg);
+          }
+        } else {
+          phoneInput.style.borderColor = "";
+          // Remove any existing error message
+          const formGroup = phoneInput.closest(".form-group");
+          const existingError = formGroup
+            ? formGroup.querySelector(".error-message")
+            : null;
+          if (existingError) existingError.remove();
+        }
+      });
+
+      // Clear error when user starts typing
+      phoneInput.addEventListener("input", function () {
+        const formGroup = phoneInput.closest(".form-group");
+        const existingError = formGroup
+          ? formGroup.querySelector(".error-message")
+          : null;
+        if (existingError) existingError.remove();
+        phoneInput.style.borderColor = "";
+      });
+    }
   }
 
   const ctaButtons = document.querySelectorAll(
