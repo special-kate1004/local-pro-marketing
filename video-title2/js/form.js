@@ -707,10 +707,12 @@ document.addEventListener("DOMContentLoaded", function () {
       header.style.display = "none";
     }
 
-    // Hide image slider
-    const imageSlider = document.querySelector(".image-slider-container");
-    if (imageSlider) {
-      imageSlider.style.display = "none";
+    // Hide image slider only on mobile (screen width <= 768px)
+    if (window.innerWidth <= 768) {
+      const imageSlider = document.querySelector(".image-slider-container");
+      if (imageSlider) {
+        imageSlider.style.display = "none";
+      }
     }
 
     // Hide "Try it for free before you pay" section

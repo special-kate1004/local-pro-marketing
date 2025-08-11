@@ -276,11 +276,11 @@ section {
 }
 .hero-section .hero-content .hero-center .hero-heading .heading-muted {
   color: var(--text-muted);
-  display: inline;
+  display: block;
 }
 .hero-section .hero-content .hero-center .hero-heading .heading-highlight {
   color: var(--text-dark);
-  display: inline;
+  display: block;
   position: relative;
 }
 .hero-section .hero-content .hero-center .hero-heading .heading-highlight::after {
@@ -390,7 +390,11 @@ section {
     text-align: left !important;
     width: 100%;
   }
-  .hero-section .hero-content .hero-center .hero-heading .heading-highlight {
+  .hero-section .hero-heading .heading-muted {
+    display: inline;
+  }
+  .hero-section .hero-heading .heading-highlight {
+    display: inline;
     text-align: left !important;
   }
   .hero-section .hero-content .hero-center .hero-heading .heading-highlight::after {
