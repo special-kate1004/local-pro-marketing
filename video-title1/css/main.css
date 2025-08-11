@@ -1407,14 +1407,13 @@ section {
   padding: 12px 16px;
   border: 1px solid var(--border-light);
   border-radius: 8px;
-  font-size: 14px;
+  font-size: 16px;
   background-color: white;
   transition: border-color 0.3s ease;
   flex-grow: 1;
   color: var(--Foreground---muted-foreground, #71717a);
   /* Base M/Regular */
   font-family: "Inter Tight";
-  font-size: 14px;
   font-style: normal;
   font-weight: 400;
   line-height: 150%; /* 21px */
