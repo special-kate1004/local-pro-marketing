@@ -371,6 +371,8 @@ section {
   height: 100%;
   background: linear-gradient(to bottom, rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 0.4) 50%, rgba(0, 0, 0, 0.6) 100%);
   z-index: 1;
+  opacity: var(--dark-overlay-opacity, 1);
+  transition: opacity 0.3s ease;
 }
 .hero-section .hero-content .hero-right .testimonial-video .play-button {
   position: absolute;
@@ -1237,12 +1239,15 @@ section {
 }
 
 .form-section {
+  overflow: visible !important;
   /* Left Column - Form */
   /* Progress Bar */
   /* Form Steps */
   /* Form Groups */
   /* Input Styles */
   /* Add more space for select arrow */
+  /* Dropdown Styles */
+  /* Error Message Styles */
   /* Radio and Checkbox Styles */
   /* Hide the custom spans completely */
   /* URL Fields */
@@ -1407,14 +1412,13 @@ section {
   padding: 12px 16px;
   border: 1px solid var(--border-light);
   border-radius: 8px;
-  font-size: 14px;
+  font-size: 16px;
   background-color: white;
   transition: border-color 0.3s ease;
   flex-grow: 1;
   color: var(--Foreground---muted-foreground, #71717a);
   /* Base M/Regular */
   font-family: "Inter Tight";
-  font-size: 14px;
   font-style: normal;
   font-weight: 400;
   line-height: 150%; /* 21px */
@@ -1437,6 +1441,81 @@ section {
 .form-section select:focus {
   outline: none;
   border-color: var(--primary-blue);
+}
+.form-section .dropdown-wrapper {
+  position: relative;
+  width: 100%;
+}
+.form-section .dropdown-input-wrapper {
+  position: relative;
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
+.form-section .dropdown-input {
+  padding-left: 40px !important;
+  padding-right: 40px !important;
+  cursor: pointer;
+}
+.form-section .dropdown-arrow {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%) rotate(90deg);
+  width: 16px;
+  height: 16px;
+  opacity: 0.5;
+  transition: transform 0.3s ease;
+  cursor: pointer;
+}
+.form-section .dropdown-wrapper.open .dropdown-arrow {
+  transform: translateY(-50%) rotate(-90deg);
+}
+.form-section .dropdown-options {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: white;
+  border: 1px solid var(--border-light);
+  border-top: none;
+  border-radius: 0 0 8px 8px;
+  max-height: 200px;
+  overflow-y: auto;
+  z-index: 1000;
+  display: none;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+.form-section .dropdown-wrapper.open .dropdown-options {
+  display: block;
+}
+.form-section .dropdown-option {
+  padding: 12px 16px;
+  cursor: pointer;
+  font-size: 14px;
+  color: var(--text-dark);
+  transition: background-color 0.2s ease;
+  border-bottom: 1px solid var(--border-light);
+}
+.form-section .dropdown-option:last-child {
+  border-bottom: none;
+}
+.form-section .dropdown-option:hover {
+  background-color: #f3f4f6;
+}
+.form-section .dropdown-option.selected {
+  background-color: #e5e7eb;
+  font-weight: 500;
+}
+.form-section .dropdown-option.hidden {
+  display: none;
+}
+.form-section .error-message {
+  color: #e53e3e;
+  font-size: 12px;
+  margin-top: 4px;
+  font-weight: 500;
+  display: block;
 }
 .form-section .radio-group,
 .form-section .checkbox-group {
@@ -1465,8 +1544,12 @@ section {
   display: none !important;
 }
 .form-section .radio-item.active-field-wrapper .radio-option,
-.form-section .checkbox-item.active-field-wrapper .checkbox-option {
+.form-section .checkbox-item .checkbox-option {
   margin-bottom: 0px !important;
+}
+.form-section .radio-item.inactive-field-wrapper {
+  cursor: pointer;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
 }
 .form-section .website-url-field,
 .form-section .service-url-field {
@@ -1490,7 +1573,7 @@ section {
   display: flex;
   flex-direction: column;
   animation: slideDown 0.3s ease;
-  margin-bottom: 4px;
+  margin-top: 8px;
 }
 .form-section .active-field-wrapper {
   border-radius: var(--8px, 8px);
@@ -1505,12 +1588,23 @@ section {
   background: var(--neutralWhite, #fff);
   box-shadow: 0 1px 2px 0 rgba(16, 24, 40, 0.05);
   padding: 12px 12px 4px 12px;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+  cursor: pointer;
+}
+.form-section .inactive-field-wrapper:hover {
+  background-color: #f5fbff;
+}
+.form-section .radio-item.inactive-field-wrapper:hover {
+  background-color: #f5fbff;
 }
 .form-section .form-step[data-step="2"] .inactive-field-wrapper {
-  padding: 23px 12px 15px 12px;
+  padding: 23px 12px;
 }
 .form-section .form-step[data-step="2"] .active-field-wrapper {
   padding: 12px;
+}
+.form-section .p-inactive {
+  padding: 23px 12px !important;
 }
 @keyframes slideDown {
   from {
@@ -1650,14 +1744,13 @@ section {
     height: 250px;
   }
   .form-section .form-actions {
-    position: fixed;
+    position: sticky;
     bottom: 0;
     left: 0;
     right: 0;
     background: white;
-    padding: 16px;
+    padding: 16px 0;
     border-top: 1px solid #e4e4e7;
-    box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.1);
     z-index: 1000;
   }
   .form-section .btn {

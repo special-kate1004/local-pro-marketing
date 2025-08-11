@@ -1239,6 +1239,7 @@ section {
 }
 
 .form-section {
+  overflow: visible !important;
   /* Left Column - Form */
   /* Progress Bar */
   /* Form Steps */
@@ -1743,14 +1744,13 @@ section {
     height: 250px;
   }
   .form-section .form-actions {
-    position: fixed;
+    position: sticky;
     bottom: 0;
     left: 0;
     right: 0;
     background: white;
-    padding: 16px;
+    padding: 16px 0;
     border-top: 1px solid #e4e4e7;
-    box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.1);
     z-index: 1000;
   }
   .form-section .btn {

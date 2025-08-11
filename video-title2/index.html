@@ -23,6 +23,10 @@
     <script src="js/swiper-slider.js" defer></script>
     <script src="js/tab.js" defer></script>
     <script src="js/faq.js" defer></script>
+    <script
+      src="https://unpkg.com/imask@7.5.0/dist/imask.min.js"
+      defer
+    ></script>
     <script src="js/form.js" defer></script>
   </head>
   <body>
@@ -143,7 +147,7 @@
                 class="play-button"
               />
               <div class="video-overlay">
-                <p>John O. - Tree Services</p>
+                <p>Cesar - Tree Services</p>
                 <div class="stars">
                   <img src="images/star.svg" alt="Star" /><img
                     src="images/star.svg"
@@ -171,7 +175,7 @@
                 class="play-button"
               />
               <div class="video-overlay">
-                <p>Omar M. - Junk Removal</p>
+                <p>Darnell - Fence Installation</p>
                 <div class="stars">
                   <img src="images/star.svg" alt="Star" /><img
                     src="images/star.svg"
@@ -1061,18 +1065,229 @@
                 <div class="form-step active" data-step="1">
                   <div class="form-group">
                     <label for="industry">Select Your Industry*</label>
-                    <div class="input-wrapper">
-                      <img
-                        src="images/search.svg"
-                        alt="Search"
-                        class="input-icon"
-                      />
-                      <input
-                        type="text"
-                        id="industry"
-                        placeholder="e.g., Junk Removal"
-                        required
-                      />
+                    <div class="dropdown-wrapper">
+                      <div class="dropdown-input-wrapper">
+                        <img
+                          src="images/search.svg"
+                          alt="Search"
+                          class="input-icon"
+                        />
+                        <input
+                          type="text"
+                          id="industry"
+                          placeholder="e.g., Junk Removal"
+                          required
+                          class="dropdown-input"
+                        />
+                        <img
+                          src="images/arrow-narrow-right.svg"
+                          alt="Dropdown"
+                          class="dropdown-arrow"
+                        />
+                      </div>
+                      <div class="dropdown-options" id="industry-options">
+                        <div class="dropdown-option" data-value="Home Painter">
+                          Home Painter
+                        </div>
+                        <div
+                          class="dropdown-option"
+                          data-value="Roof Repair/Installation"
+                        >
+                          Roof Repair/Installation
+                        </div>
+                        <div
+                          class="dropdown-option"
+                          data-value="Deck and Patio Building/Repair"
+                        >
+                          Deck and Patio Building/Repair
+                        </div>
+                        <div
+                          class="dropdown-option"
+                          data-value="Asphalt Services"
+                        >
+                          Asphalt Services
+                        </div>
+                        <div
+                          class="dropdown-option"
+                          data-value="Concrete Driveway"
+                        >
+                          Concrete Driveway
+                        </div>
+                        <div
+                          class="dropdown-option"
+                          data-value="Exterior Pressure Washing"
+                        >
+                          Exterior Pressure Washing
+                        </div>
+                        <div
+                          class="dropdown-option"
+                          data-value="Residential Moving"
+                        >
+                          Residential Moving
+                        </div>
+                        <div
+                          class="dropdown-option"
+                          data-value="General Carpet Cleaning"
+                        >
+                          General Carpet Cleaning
+                        </div>
+                        <div
+                          class="dropdown-option"
+                          data-value="Fence Installation/Repair"
+                        >
+                          Fence Installation/Repair
+                        </div>
+                        <div
+                          class="dropdown-option"
+                          data-value="HVAC Repair/Install"
+                        >
+                          HVAC Repair/Install
+                        </div>
+                        <div
+                          class="dropdown-option"
+                          data-value="Tree Service Provider"
+                        >
+                          Tree Service Provider
+                        </div>
+                        <div
+                          class="dropdown-option"
+                          data-value="Artificial Turf Installation"
+                        >
+                          Artificial Turf Installation
+                        </div>
+                        <div
+                          class="dropdown-option"
+                          data-value="Gutter Cleaning"
+                        >
+                          Gutter Cleaning
+                        </div>
+                        <div
+                          class="dropdown-option"
+                          data-value="Handyman Services"
+                        >
+                          Handyman Services
+                        </div>
+                        <div
+                          class="dropdown-option"
+                          data-value="Roadside Assistance Services"
+                        >
+                          Roadside Assistance Services
+                        </div>
+                        <div
+                          class="dropdown-option"
+                          data-value="Home Renovations"
+                        >
+                          Home Renovations
+                        </div>
+                        <div
+                          class="dropdown-option"
+                          data-value="Bathroom Remodeling"
+                        >
+                          Bathroom Remodeling
+                        </div>
+                        <div
+                          class="dropdown-option"
+                          data-value="Kitchen Remodeling"
+                        >
+                          Kitchen Remodeling
+                        </div>
+                        <div class="dropdown-option" data-value="Junk Removal">
+                          Junk Removal
+                        </div>
+                        <div class="dropdown-option" data-value="Landscaping">
+                          Landscaping
+                        </div>
+                        <div
+                          class="dropdown-option"
+                          data-value="Plumbing Services"
+                        >
+                          Plumbing Services
+                        </div>
+                        <div
+                          class="dropdown-option"
+                          data-value="Electrical Services"
+                        >
+                          Electrical Services
+                        </div>
+                        <div
+                          class="dropdown-option"
+                          data-value="Window Installation/Repair"
+                        >
+                          Window Installation/Repair
+                        </div>
+                        <div
+                          class="dropdown-option"
+                          data-value="Garage Door Installation/Repair"
+                        >
+                          Garage Door Installation/Repair
+                        </div>
+                        <div class="dropdown-option" data-value="Pest Control">
+                          Pest Control
+                        </div>
+                        <div
+                          class="dropdown-option"
+                          data-value="House Cleaning"
+                        >
+                          House Cleaning
+                        </div>
+                        <div class="dropdown-option" data-value="Pool Services">
+                          Pool Services
+                        </div>
+                        <div
+                          class="dropdown-option"
+                          data-value="Security System Installation"
+                        >
+                          Security System Installation
+                        </div>
+                        <div
+                          class="dropdown-option"
+                          data-value="Solar Panel Installation"
+                        >
+                          Solar Panel Installation
+                        </div>
+                        <div class="dropdown-option" data-value="Roofing">
+                          Roofing
+                        </div>
+                        <div
+                          class="dropdown-option"
+                          data-value="Siding Installation/Repair"
+                        >
+                          Siding Installation/Repair
+                        </div>
+                        <div
+                          class="dropdown-option"
+                          data-value="Foundation Repair"
+                        >
+                          Foundation Repair
+                        </div>
+                        <div
+                          class="dropdown-option"
+                          data-value="Basement Waterproofing"
+                        >
+                          Basement Waterproofing
+                        </div>
+                        <div
+                          class="dropdown-option"
+                          data-value="Mold Remediation"
+                        >
+                          Mold Remediation
+                        </div>
+                        <div
+                          class="dropdown-option"
+                          data-value="Water Damage Restoration"
+                        >
+                          Water Damage Restoration
+                        </div>
+                        <div
+                          class="dropdown-option"
+                          data-value="Fire Damage Restoration"
+                        >
+                          Fire Damage Restoration
+                        </div>
+                        <div class="dropdown-option" data-value="Other">
+                          Other
+                        </div>
+                      </div>
                     </div>
                   </div>
                   <div class="form-group">
@@ -1098,7 +1313,7 @@
                   <div class="form-group">
                     <label>Do you have a website?</label>
                     <div class="radio-group">
-                      <div class="radio-item inactive-field-wrapper">
+                      <div class="radio-item active-field-wrapper">
                         <input
                           type="radio"
                           name="website"
@@ -1171,7 +1386,9 @@
                         </div>
                       </div>
 
-                      <div class="checkbox-item inactive-field-wrapper">
+                      <div
+                        class="checkbox-item inactive-field-wrapper p-inactive"
+                      >
                         <label class="checkbox-option">
                           <input
                             type="checkbox"
@@ -1182,7 +1399,9 @@
                         </label>
                       </div>
 
-                      <div class="checkbox-item inactive-field-wrapper">
+                      <div
+                        class="checkbox-item inactive-field-wrapper p-inactive"
+                      >
                         <label class="checkbox-option">
                           <input
                             type="checkbox"
@@ -1238,7 +1457,7 @@
                     <input
                       type="tel"
                       id="phone"
-                      placeholder="e.g., (123) 123-1234"
+                      placeholder="(123) 456-7890"
                       required
                     />
                   </div>
@@ -1346,14 +1565,30 @@
         <div class="footer-bottom">
           <p class="copyright">Voolt Company. 2025. All rights reserved</p>
           <div class="social-links">
-            <a href="#"
+            <a
+              href="https://www.facebook.com/getvoolt"
+              target="_blank"
+              rel="noopener noreferrer"
               ><img src="images/facebook-icon.svg" alt="Facebook"
             /></a>
-            <a href="#"
+            <a
+              href="https://www.instagram.com/getvoolt"
+              target="_blank"
+              rel="noopener noreferrer"
               ><img src="images/instagram-icon.svg" alt="Instagram"
             /></a>
-            <a href="#"><img src="images/tiktok-icon.svg" alt="Tiktok" /></a>
-            <a href="#"><img src="images/youtube-icon.svg" alt="Youtube" /></a>
+            <a
+              href="https://www.tiktok.com/@getvoolt"
+              target="_blank"
+              rel="noopener noreferrer"
+              ><img src="images/tiktok-icon.svg" alt="Tiktok"
+            /></a>
+            <a
+              href="https://www.youtube.com/@getvoolt"
+              target="_blank"
+              rel="noopener noreferrer"
+              ><img src="images/youtube-icon.svg" alt="Youtube"
+            /></a>
           </div>
         </div>
       </div>
