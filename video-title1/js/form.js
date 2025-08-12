@@ -1009,6 +1009,8 @@ document.addEventListener("DOMContentLoaded", function () {
         const overlay = videoContainer.querySelector(".video-overlay");
 
         if (video.paused) {
+          // Unmute the video when user first interacts with it
+          video.muted = false;
           video.play();
           if (playButton) {
             playButton.style.display = "none";
