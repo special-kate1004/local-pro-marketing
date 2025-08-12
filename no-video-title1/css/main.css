@@ -1314,6 +1314,25 @@ section {
   margin: 0;
   line-height: 1.5;
 }
+.form-section .back-to-home-btn {
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  color: var(--text-muted);
+  margin: 16px 0 0 0;
+  cursor: pointer;
+  transition: color 0.3s ease;
+  text-decoration: none;
+}
+.form-section .back-to-home-btn:hover {
+  color: var(--text-dark);
+}
+.form-section .back-to-home-btn svg {
+  transition: transform 0.3s ease;
+}
+.form-section .back-to-home-btn:hover svg {
+  transform: translateX(-2px);
+}
 .form-section .progress-bar {
   display: flex;
   align-items: center;

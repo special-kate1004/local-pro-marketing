@@ -72,6 +72,29 @@
     line-height: 1.5;
   }
 
+  .back-to-home-btn {
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+    color: var(--text-muted);
+    margin: 16px 0 0 0;
+    cursor: pointer;
+    transition: color 0.3s ease;
+    text-decoration: none;
+
+    &:hover {
+      color: var(--text-dark);
+    }
+
+    svg {
+      transition: transform 0.3s ease;
+    }
+
+    &:hover svg {
+      transform: translateX(-2px);
+    }
+  }
+
   /* Progress Bar */
   .progress-bar {
     display: flex;

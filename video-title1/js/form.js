@@ -987,6 +987,9 @@ document.addEventListener("DOMContentLoaded", function () {
   // Initialize phone number masking
   initializePhoneMask();
 
+  // Initialize back to home button
+  initializeBackToHomeButton();
+
   // Initialize video play buttons
   function initializeVideoPlayButtons() {
     console.log("Initializing video play buttons...");
@@ -1190,6 +1193,26 @@ document.addEventListener("DOMContentLoaded", function () {
           : null;
         if (existingError) existingError.remove();
         phoneInput.style.borderColor = "";
+      });
+    }
+  }
+
+  // Initialize back to home button functionality
+  function initializeBackToHomeButton() {
+    const backToHomeBtn = document.querySelector(".back-to-home-btn");
+
+    if (backToHomeBtn) {
+      backToHomeBtn.addEventListener("click", function (e) {
+        e.preventDefault();
+
+        // Reset form to initial state
+        resetForm();
+
+        // Hide form and show homepage
+        hideForm();
+
+        // Scroll to top of page
+        window.scrollTo(0, 0);
       });
     }
   }
