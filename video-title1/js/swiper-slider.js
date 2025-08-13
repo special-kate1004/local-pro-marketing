@@ -15,10 +15,10 @@ document.addEventListener("DOMContentLoaded", function () {
       slidesPerView: 1,
       spaceBetween: 20,
       loop: true,
-      autoplay: {
-        delay: 3000,
-        disableOnInteraction: false,
-      },
+      // autoplay: {
+      //   delay: 3000,
+      //   disableOnInteraction: false,
+      // },
       pagination: {
         el: ".swiper-pagination",
         clickable: true,
@@ -46,10 +46,10 @@ document.addEventListener("DOMContentLoaded", function () {
       slidesPerView: 1,
       spaceBetween: 20,
       loop: true,
-      autoplay: {
-        delay: 3000,
-        disableOnInteraction: false,
-      },
+      // autoplay: {
+      //   delay: 3000,
+      //   disableOnInteraction: false,
+      // },
       pagination: {
         el: ".meta-swiper .swiper-pagination",
         clickable: true,
@@ -92,10 +92,10 @@ document.addEventListener("DOMContentLoaded", function () {
     slidesPerView: 1,
     spaceBetween: 30,
     loop: true,
-    // pagination: {
-    //   el: ".how-it-works-swiper .swiper-pagination",
-    //   clickable: true,
-    // },
+    pagination: {
+      el: ".how-it-works-swiper .swiper-pagination",
+      clickable: true,
+    },
     breakpoints: {
       // Mobile (768px and below)
       320: {

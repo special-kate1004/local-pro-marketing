@@ -154,48 +154,11 @@
 
       .swiper-pagination {
         position: relative;
-        margin-top: 30px;
+        margin-top: 50px;
         display: flex;
         justify-content: center;
         gap: 8px;
         z-index: 20;
-
-        .swiper-pagination-bullet {
-          width: 12px;
-          height: 12px;
-          background-color: #d1d5db;
-          opacity: 1;
-          transition: all 0.3s ease;
-          border-radius: 50%;
-          cursor: pointer;
-
-          &.swiper-pagination-bullet-active {
-            background-color: var(--primary-blue);
-            opacity: 1;
-            transform: scale(1.1);
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-          }
-        }
-      }
-
-      .swiper-button-next,
-      .swiper-button-prev {
-        color: var(--primary-blue);
-        background-color: rgba(255, 255, 255, 0.9);
-        width: 40px;
-        height: 40px;
-        border-radius: 50%;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-
-        &::after {
-          font-size: 16px;
-          font-weight: bold;
-        }
-
-        &:hover {
-          background-color: var(--primary-blue);
-          color: white;
-        }
       }
     }
   }

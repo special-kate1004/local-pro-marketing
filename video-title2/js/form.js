@@ -1,22 +1,35 @@
 // Form Functionality
 document.addEventListener("DOMContentLoaded", function () {
-  console.log("DOM loaded, form.js script is running");
   let currentStep = 1;
   const totalSteps = 3;
 
   // Initialize form functionality
   function initializeForm() {
-    console.log("Initializing form...");
-
     // Add event listeners
     addFormEventListeners();
 
-    console.log("Form initialization complete");
+    // Initialize URL fields for pre-checked checkboxes
+    initializeUrlFields();
+  }
+
+  // Initialize URL fields for pre-checked checkboxes
+  function initializeUrlFields() {
+    const checkedServiceCheckboxes = document.querySelectorAll(
+      'input[name="your-current-services"]:checked'
+    );
+
+    checkedServiceCheckboxes.forEach((checkbox) => {
+      const urlField = checkbox
+        .closest(".checkbox-item")
+        .querySelector(".service-url-field");
+      if (urlField) {
+        urlField.classList.add("active");
+      }
+    });
   }
 
   // Show specific step
   function showStep(step) {
-    console.log("showStep called with step:", step);
     // Hide all steps
     document.querySelectorAll(".form-step").forEach((stepEl) => {
       stepEl.classList.remove("active");
@@ -27,25 +40,30 @@ document.addEventListener("DOMContentLoaded", function () {
       `.form-steps [data-step="${step}"]`
     );
     if (currentStepEl) {
-      console.log("Showing step:", step, currentStepEl);
       currentStepEl.classList.add("active");
-    } else {
-      console.log("Step element not found for step:", step);
     }
 
     currentStep = step;
-    console.log("Current step updated to:", currentStep);
 
-    // Handle step 4 (success screen) - hide progress bar and form actions
+    // Handle step 4 (success screen) - hide progress bar, form actions, and form header elements (except logo)
     const progressBar = document.querySelector(".progress-bar");
     const formActions = document.querySelector(".form-actions");
+    const formTitle = document.querySelector(".form-title");
+    const formSubtitle = document.querySelector(".form-subtitle");
+    const backToHomeBtn = document.querySelector(".back-to-home-btn");
 
     if (step === 4) {
       if (progressBar) progressBar.style.display = "none";
       if (formActions) formActions.style.display = "none";
+      if (formTitle) formTitle.style.display = "none";
+      if (formSubtitle) formSubtitle.style.display = "none";
+      if (backToHomeBtn) backToHomeBtn.style.display = "none";
     } else {
       if (progressBar) progressBar.style.display = "flex";
       if (formActions) formActions.style.display = "flex";
+      if (formTitle) formTitle.style.display = "block";
+      if (formSubtitle) formSubtitle.style.display = "block";
+      if (backToHomeBtn) backToHomeBtn.style.display = "block";
       // Update progress bar and form actions for steps 1-3
       updateProgressBar(step);
       updateFormActions();
@@ -78,9 +96,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // Update progress bar
   function updateProgressBar(step) {
-    console.log("updateProgressBar called", step);
+    console.log("updateProgressBar called with step:", step);
     const progressSteps = document.querySelectorAll(".step-circle");
     const progressLines = document.querySelectorAll(".step-line");
+
+    console.log("Found progress steps:", progressSteps.length);
+    console.log("Found progress lines:", progressLines.length);
 
     progressSteps.forEach((stepEl, index) => {
       const stepNumber = index + 1;
@@ -89,12 +110,14 @@ document.addEventListener("DOMContentLoaded", function () {
       if (stepNumber < step) {
         stepEl.classList.add("completed");
         stepEl.textContent = "✓";
-        console.log("completed", step, stepNumber);
+        console.log(`Step ${stepNumber}: completed`);
       } else if (stepNumber === step) {
         stepEl.classList.add("active");
         stepEl.textContent = stepNumber;
+        console.log(`Step ${stepNumber}: active`);
       } else {
         stepEl.textContent = stepNumber;
+        console.log(`Step ${stepNumber}: inactive`);
       }
     });
 
@@ -102,36 +125,31 @@ document.addEventListener("DOMContentLoaded", function () {
       const stepNumber = index + 1;
       lineEl.classList.remove("active", "completed");
 
-      if (stepNumber < step - 1) {
+      if (stepNumber < step) {
         lineEl.classList.add("completed");
-      } else if (stepNumber === step - 1) {
-        lineEl.classList.add("active");
+        console.log(`Line ${stepNumber}: completed`);
+      } else {
+        console.log(`Line ${stepNumber}: inactive`);
       }
     });
   }
 
   // Add event listeners
   function addFormEventListeners() {
-    console.log("Adding form event listeners...");
-
     // Next button (now only one global button)
     const nextButton = document.querySelector(".next-btn");
-    console.log("Found next button:", nextButton);
     if (nextButton) {
-      console.log("Adding click listener to next button");
       nextButton.addEventListener("click", handleNext);
     }
 
     // Back button (now only one global button)
     const backButton = document.querySelector(".back-btn");
-    console.log("Found back button:", backButton);
     if (backButton) {
       backButton.addEventListener("click", handleBack);
     }
 
     // Submit button
     const submitButton = document.querySelector(".submit-btn");
-    console.log("Found submit button:", submitButton);
     if (submitButton) {
       submitButton.addEventListener("click", handleSubmit);
     }
@@ -145,15 +163,58 @@ document.addEventListener("DOMContentLoaded", function () {
     const radioCheckboxes = document.querySelectorAll(
       'input[type="radio"], input[type="checkbox"]'
     );
-    console.log("Found radio/checkbox inputs:", radioCheckboxes.length);
 
     radioCheckboxes.forEach((input) => {
       input.addEventListener("change", handleInputChange);
     });
 
+    // Handle exclusive "None" option for services
+    const noneCheckbox = document.querySelector(
+      'input[name="your-current-services"][value="none"]'
+    );
+    const serviceCheckboxes = document.querySelectorAll(
+      'input[name="your-current-services"]:not([value="none"])'
+    );
+
+    if (noneCheckbox) {
+      noneCheckbox.addEventListener("change", function () {
+        if (this.checked) {
+          // If "None" is checked, uncheck all other service options
+          serviceCheckboxes.forEach((checkbox) => {
+            checkbox.checked = false;
+            checkbox.dispatchEvent(new Event("change"));
+          });
+        }
+      });
+    }
+
+    // Handle other service checkboxes
+    serviceCheckboxes.forEach((checkbox) => {
+      checkbox.addEventListener("change", function () {
+        if (this.checked) {
+          // If any service is checked, uncheck "None"
+          if (noneCheckbox) {
+            noneCheckbox.checked = false;
+            noneCheckbox.dispatchEvent(new Event("change"));
+          }
+        }
+
+        // Show/hide URL field based on checkbox state
+        const urlField =
+          this.closest(".checkbox-item").querySelector(".service-url-field");
+        if (urlField) {
+          if (this.checked) {
+            urlField.style.display = "flex";
+            urlField.style.flexDirection = "column";
+          } else {
+            urlField.style.display = "none";
+          }
+        }
+      });
+    });
+
     // Make entire checkbox items clickable
     const checkboxItems = document.querySelectorAll(".checkbox-item");
-    console.log("Found checkbox items:", checkboxItems.length);
 
     checkboxItems.forEach((item) => {
       item.addEventListener("click", function (e) {
@@ -210,7 +271,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Make entire radio items clickable
     const radioItems = document.querySelectorAll(".radio-item");
-    console.log("Found radio items:", radioItems.length);
 
     radioItems.forEach((item) => {
       item.addEventListener("click", function (e) {
@@ -229,25 +289,14 @@ document.addEventListener("DOMContentLoaded", function () {
         }
       });
     });
-
-    console.log("Event listeners added successfully");
   }
 
   // Handle input changes to update wrapper classes
   function handleInputChange() {
-    console.log(
-      "Input changed:",
-      this.type,
-      this.name,
-      this.value,
-      this.checked
-    );
-
     if (this.type === "radio") {
       // For radio buttons, handle the entire group
       const radioGroup = this.closest(".radio-group");
       if (radioGroup) {
-        console.log("Processing radio group");
         // First, set all radio items in the group to inactive
         radioGroup.querySelectorAll(".radio-item").forEach((item) => {
           item.classList.remove("active-field-wrapper");
@@ -259,6 +308,18 @@ document.addEventListener("DOMContentLoaded", function () {
         if (selectedItem) {
           selectedItem.classList.remove("inactive-field-wrapper");
           selectedItem.classList.add("active-field-wrapper");
+        }
+
+        // Handle website URL field visibility
+        if (this.name === "website") {
+          const websiteUrlField = document.getElementById("website-url-field");
+          if (websiteUrlField) {
+            if (this.value === "yes" && this.checked) {
+              websiteUrlField.classList.add("active");
+            } else {
+              websiteUrlField.classList.remove("active");
+            }
+          }
         }
       }
     } else {
@@ -272,35 +333,40 @@ document.addEventListener("DOMContentLoaded", function () {
           item.classList.remove("active-field-wrapper");
           item.classList.add("inactive-field-wrapper");
         }
+
+        // Handle service URL field visibility
+        if (this.name === "your-current-services") {
+          const urlField = item.querySelector(".service-url-field");
+          if (urlField) {
+            if (this.checked) {
+              urlField.classList.add("active");
+            } else {
+              urlField.classList.remove("active");
+            }
+          }
+        }
       }
     }
   }
 
   // Handle next button
   function handleNext() {
-    console.log("Next button clicked, current step:", currentStep, totalSteps);
     if (validateCurrentStep()) {
-      console.log("Validation passed, moving to next step");
       if (currentStep < totalSteps) {
-        console.log(
-          "Moving from step",
-          currentStep,
-          "to step",
-          currentStep + 1
-        );
         updateProgressBar(currentStep + 1);
         showStep(currentStep + 1);
       }
-    } else {
-      console.log("Validation failed for step", currentStep);
     }
   }
 
   // Handle back button
   function handleBack() {
+    console.log("handleBack called, currentStep:", currentStep);
     if (currentStep > 1) {
-      showStep(currentStep - 1);
-      updateProgressBar(currentStep - 1);
+      const newStep = currentStep - 1;
+      console.log("Going to step:", newStep);
+      showStep(newStep);
+      updateProgressBar(newStep);
     }
   }
 
@@ -308,7 +374,6 @@ document.addEventListener("DOMContentLoaded", function () {
   function handleSubmit() {
     if (validateCurrentStep()) {
       // Here you would typically send the form data to your server
-      console.log("Form submitted!");
 
       // Show step 4 (success screen)
       showStep(4);
@@ -438,26 +503,13 @@ document.addEventListener("DOMContentLoaded", function () {
         '.website-url-field input[type="url"]'
       );
 
-      console.log("Website validation - found radios:", websiteRadios.length);
-      console.log("Website validation - radio group:", websiteGroup);
-
       // Check if any website radio button is selected
       const isWebsiteSelected = Array.from(websiteRadios).some(
         (radio) => radio.checked
       );
 
-      console.log("Website validation - is selected:", isWebsiteSelected);
-      console.log(
-        "Website validation - radio states:",
-        Array.from(websiteRadios).map((r) => ({
-          value: r.value,
-          checked: r.checked,
-        }))
-      );
-
       if (!isWebsiteSelected) {
         isValid = false;
-        console.log("Website validation - showing error: no option selected");
 
         // Add error styling to radio group
         if (websiteGroup) {
@@ -496,7 +548,6 @@ document.addEventListener("DOMContentLoaded", function () {
           // "Yes" is selected - check if URL field is filled
           if (!websiteUrlField || !websiteUrlField.value.trim()) {
             isValid = false;
-            console.log("Website validation - showing error: URL required");
 
             // Add error styling to URL field
             if (websiteUrlField) {
@@ -518,9 +569,6 @@ document.addEventListener("DOMContentLoaded", function () {
           } else if (!isValidURL(websiteUrlField.value.trim())) {
             // URL is filled but invalid format
             isValid = false;
-            console.log(
-              "Website validation - showing error: invalid URL format"
-            );
 
             // Add error styling to URL field
             if (websiteUrlField) {
@@ -554,7 +602,6 @@ document.addEventListener("DOMContentLoaded", function () {
           }
         } else if (noRadio && noRadio.checked) {
           // "No" is selected - no URL required, proceed
-          console.log("Website validation - No selected, proceeding");
           // Remove any error styling from URL field
           if (websiteUrlField) {
             websiteUrlField.style.borderColor = "";
@@ -572,11 +619,15 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Additional validation for step 2 - service URL fields
     if (currentStep === 2) {
-      const angiCheckbox = currentStepEl.querySelector('input[name="angi"]');
-      const thumbtackCheckbox = currentStepEl.querySelector(
-        'input[name="thumbtack"]'
+      const angiCheckbox = currentStepEl.querySelector(
+        'input[name="your-current-services"][value="angi"]'
       );
-      const yelpCheckbox = currentStepEl.querySelector('input[name="yelp"]');
+      const thumbtackCheckbox = currentStepEl.querySelector(
+        'input[name="your-current-services"][value="thumbtack"]'
+      );
+      const yelpCheckbox = currentStepEl.querySelector(
+        'input[name="your-current-services"][value="yelp"]'
+      );
 
       const angiUrlField = currentStepEl.querySelector(
         '#angi-url-field input[type="url"]'
@@ -838,56 +889,6 @@ document.addEventListener("DOMContentLoaded", function () {
     return maskedFormat.test(phone);
   }
 
-  // Reset form
-  function resetForm() {
-    // Reset all form fields
-    document.querySelectorAll("input, select").forEach((field) => {
-      field.value = "";
-    });
-
-    // Reset radio buttons
-    document.querySelectorAll('input[type="radio"]').forEach((radio) => {
-      radio.checked = false;
-    });
-
-    // Reset checkboxes
-    document.querySelectorAll('input[type="checkbox"]').forEach((checkbox) => {
-      checkbox.checked = false;
-    });
-
-    // Reset website field
-    document.getElementById("website-url-field").classList.remove("active");
-
-    // Reset service URL fields
-    document.querySelectorAll(".service-url-field").forEach((field) => {
-      field.classList.remove("active");
-    });
-
-    // Reset progress bar to first step
-    const progressSteps = document.querySelectorAll(".step-circle");
-    const progressLines = document.querySelectorAll(".step-line");
-
-    // Reset all circles
-    progressSteps.forEach((step, index) => {
-      step.classList.remove("active", "completed");
-      if (index === 0) {
-        step.classList.add("active");
-      }
-    });
-
-    // Reset all lines
-    progressLines.forEach((line, index) => {
-      line.classList.remove("active", "completed");
-      if (index === 0) {
-        line.classList.add("active");
-      }
-    });
-
-    // Go back to first step
-    showStep(1);
-    updateProgressBar(1);
-  }
-
   // Form Display/Hide Functionality
   function showForm() {
     // Hide header
@@ -956,6 +957,26 @@ document.addEventListener("DOMContentLoaded", function () {
     if (formSection) {
       formSection.style.display = "none";
     }
+
+    // Reset progress bar to initial state when hiding form
+    const progressSteps = document.querySelectorAll(".step-circle");
+    const progressLines = document.querySelectorAll(".step-line");
+
+    // Reset all circles to initial state
+    progressSteps.forEach((step, index) => {
+      step.classList.remove("active", "completed");
+      step.textContent = index + 1;
+    });
+
+    // Reset all lines
+    progressLines.forEach((line) => {
+      line.classList.remove("active", "completed");
+    });
+
+    // Set first step as active
+    if (progressSteps.length > 0) {
+      progressSteps[0].classList.add("active");
+    }
   }
 
   // Initialize image slider
@@ -992,26 +1013,19 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // Initialize video play buttons
   function initializeVideoPlayButtons() {
-    console.log("Initializing video play buttons...");
     const testimonialVideos = document.querySelectorAll(".testimonial-video");
-    console.log("Found testimonial videos:", testimonialVideos.length);
 
     testimonialVideos.forEach((videoContainer, index) => {
       const video = videoContainer.querySelector(".video-player");
       const playButton = videoContainer.querySelector(".play-button");
 
-      console.log(`Video ${index + 1}:`, {
-        video: video,
-        playButton: playButton,
-        videoContainer: videoContainer,
-      });
-
       // Function to toggle video play/pause
       function toggleVideo() {
-        console.log("Toggle video called, video paused:", video.paused);
         const overlay = videoContainer.querySelector(".video-overlay");
 
         if (video.paused) {
+          // Unmute the video when user first interacts with it
+          video.muted = false;
           video.play();
           if (playButton) {
             playButton.style.display = "none";
@@ -1036,7 +1050,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
       // Click on video area to play/pause
       videoContainer.addEventListener("click", function (e) {
-        console.log("Video container clicked");
         // Don't trigger if clicking on the overlay text
         if (!e.target.closest(".video-overlay")) {
           toggleVideo();
@@ -1045,9 +1058,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
       // Click on play button to play/pause
       if (playButton) {
-        console.log("Adding click listener to play button");
         playButton.addEventListener("click", function (e) {
-          console.log("Play button clicked");
           e.stopPropagation(); // Prevent triggering video container click
           toggleVideo();
         });
@@ -1203,8 +1214,8 @@ document.addEventListener("DOMContentLoaded", function () {
       backToHomeBtn.addEventListener("click", function (e) {
         e.preventDefault();
 
-        // Reset form to initial state
-        resetForm();
+        // Don't reset form - preserve user's input
+        // resetForm();
 
         // Hide form and show homepage
         hideForm();

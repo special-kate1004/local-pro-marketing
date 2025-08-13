@@ -22,8 +22,8 @@
         text-align: center;
 
         .testimonial-image {
-          width: 200px;
-          height: 200px;
+          width: 100%;
+          max-height: 500px;
           border-radius: 12px;
           object-fit: cover;
           margin-bottom: 16px;

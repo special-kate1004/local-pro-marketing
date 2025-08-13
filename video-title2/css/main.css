@@ -907,8 +907,8 @@ section {
   text-align: center;
 }
 #section-ad-examples .ad-examples-content .testimonial-column .testimonial-card .testimonial-image {
-  width: 200px;
-  height: 200px;
+  width: 100%;
+  max-height: 500px;
   border-radius: 12px;
   object-fit: cover;
   margin-bottom: 16px;
@@ -1175,45 +1175,11 @@ section {
 }
 #section-how-it-works .how-it-works-swiper-container .how-it-works-swiper .swiper-pagination {
   position: relative;
-  margin-top: 30px;
+  margin-top: 50px;
   display: flex;
   justify-content: center;
   gap: 8px;
   z-index: 20;
-}
-#section-how-it-works .how-it-works-swiper-container .how-it-works-swiper .swiper-pagination .swiper-pagination-bullet {
-  width: 12px;
-  height: 12px;
-  background-color: #d1d5db;
-  opacity: 1;
-  transition: all 0.3s ease;
-  border-radius: 50%;
-  cursor: pointer;
-}
-#section-how-it-works .how-it-works-swiper-container .how-it-works-swiper .swiper-pagination .swiper-pagination-bullet.swiper-pagination-bullet-active {
-  background-color: var(--primary-blue);
-  opacity: 1;
-  transform: scale(1.1);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-#section-how-it-works .how-it-works-swiper-container .how-it-works-swiper .swiper-button-next,
-#section-how-it-works .how-it-works-swiper-container .how-it-works-swiper .swiper-button-prev {
-  color: var(--primary-blue);
-  background-color: rgba(255, 255, 255, 0.9);
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-}
-#section-how-it-works .how-it-works-swiper-container .how-it-works-swiper .swiper-button-next::after,
-#section-how-it-works .how-it-works-swiper-container .how-it-works-swiper .swiper-button-prev::after {
-  font-size: 16px;
-  font-weight: bold;
-}
-#section-how-it-works .how-it-works-swiper-container .how-it-works-swiper .swiper-button-next:hover,
-#section-how-it-works .how-it-works-swiper-container .how-it-works-swiper .swiper-button-prev:hover {
-  background-color: var(--primary-blue);
-  color: white;
 }
 @media (max-width: 992px) {
   #section-how-it-works .how-it-works-header {
@@ -1251,7 +1217,7 @@ section {
   /* Radio and Checkbox Styles */
   /* Hide the custom spans completely */
   /* URL Fields */
-  /* Show URL fields when checkboxes are checked */
+  /* Show URL fields when active class is present */
   /* Show website URL field when "Yes" radio is checked */
   /* Form Actions */
   /* Right Column - Image Slider */
@@ -1579,10 +1545,9 @@ section {
 .form-section .service-url-field.active {
   display: flex;
   animation: slideDown 0.3s ease;
+  margin-top: 8px;
 }
-.form-section .checkbox-item input[name=angi]:checked ~ .service-url-field,
-.form-section .checkbox-item input[name=thumbtack]:checked ~ .service-url-field,
-.form-section .checkbox-item input[name=yelp]:checked ~ .service-url-field {
+.form-section .service-url-field.active {
   display: flex;
   flex-direction: column;
   animation: slideDown 0.3s ease;

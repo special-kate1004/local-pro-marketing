@@ -397,12 +397,11 @@
   .service-url-field.active {
     display: flex;
     animation: slideDown 0.3s ease;
+    margin-top: 8px;
   }
 
-  /* Show URL fields when checkboxes are checked */
-  .checkbox-item input[name="angi"]:checked ~ .service-url-field,
-  .checkbox-item input[name="thumbtack"]:checked ~ .service-url-field,
-  .checkbox-item input[name="yelp"]:checked ~ .service-url-field {
+  /* Show URL fields when active class is present */
+  .service-url-field.active {
     display: flex;
     flex-direction: column;
     animation: slideDown 0.3s ease;
