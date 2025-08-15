@@ -326,7 +326,7 @@ section {
   display: flex;
   column-gap: 16px;
   row-gap: 5px;
-  font-size: 12px;
+  font-size: 15px;
   color: var(--text-muted);
 }
 .hero-section .hero-content .hero-left .hero-cta {
